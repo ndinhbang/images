@@ -1,0 +1,67 @@
+contents:
+  repositories:
+    - https://packages.wolfi.dev/os
+  keyring:
+    - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+  packages:
+    - wolfi-baselayout
+    - ca-certificates
+    - curl
+    - php
+    - php-ctype
+    - php-curl
+    - php-dom
+    - php-fileinfo
+    - php-fpm
+    - php-iconv
+    - php-mbstring
+    - php-mysqlnd
+    - php-openssl
+    - php-pdo
+    - php-pdo_mysql
+    - php-pdo_sqlite
+    - php-phar
+    - php-simplexml
+    - php-sodium
+    - php-xml
+    # dev
+    - composer
+    - php-xmlwriter
+    - apk-tools
+    - bash
+    - busybox
+    - git
+    - wget
+    # extra packages come from var.extra_packages
+
+entrypoint:
+  type: service-bundle
+  services:
+    php-fpm: /usr/sbin/php-fpm
+
+environment:
+  PATH: /usr/sbin:/sbin:/usr/bin:/bin
+  SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
+
+paths:
+  - path: /app
+    type: directory
+    permissions: 511
+    uid: 65532
+    gid: 65532
+
+work-dir: /app
+
+accounts:
+  groups:
+    - groupname: php
+      gid: 65532
+  users:
+    - username: php
+      uid: 65532
+      gid: 65532
+    - username: laravel
+      uid: 1000
+      gid: 1000
+
+  run-as: 65532
